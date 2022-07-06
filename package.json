@@ -1,0 +1,30 @@
+{
+  "name": "mongo-analyser",
+  "version": "1.0.0",
+  "description": "A tool that is not keyhole",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build-mac-m1": "pkg -t node16-macos-arm64 index.js -c package.json -o build/mongo-analyser-macos-arm64",
+    "build-mac-intel": "pkg -t node16-macos-x64 index.js -c package.json -o build/mongo-analyser-macos-x64"
+  },
+  "keywords": [
+    "mongodb",
+    "analyzer",
+    "logs",
+    "logparser",
+    "query",
+    "analysis",
+    "slow",
+    "query",
+    "debugging"
+  ],
+  "author": "Gobind Singh",
+  "license": "ISC",
+  "dependencies": {
+    "event-stream": "^4.0.1",
+    "fast-redact": "^3.1.1",
+    "json-to-table": "^4.2.1",
+    "yargs": "^17.5.1"
+  }
+}
