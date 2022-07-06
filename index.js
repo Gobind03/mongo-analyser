@@ -8,10 +8,10 @@ const argv = require('yargs/yargs')(hideBin(process.argv))
         alias: 'l', describe: 'Limit the number of output rows', type: 'number', default: 100
     })
     .options('sort-by-qtr', {
-        alias: 's', describe: 'Sort the output by QTR', type: 'boolean',
+        describe: 'Sort the output by QTR', type: 'boolean',
     })
     .options('sort-by-duration', {
-        alias: 's', describe: 'Sort the output by Execution Time', type: 'boolean',
+        describe: 'Sort the output by Execution Time', type: 'boolean',
     })
     .options('log-file', {
         alias: 'f', describe: 'Full Log file path to analyse', demandOption: true, type: 'string'
@@ -19,4 +19,4 @@ const argv = require('yargs/yargs')(hideBin(process.argv))
     .help('help').argv
 
 const {parse} = require('./log_parser/parse_logs');
-parse(argv.logFile, argv.grouped, argv.limit);
+parse(argv.logFile, argv.grouped, argv.limit, argv.sortByQtr, argv.sortByDuration);
