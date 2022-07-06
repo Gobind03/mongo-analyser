@@ -44,3 +44,21 @@ You can also sort results by using the following flags:
 2.  `--sort-by-duration`: Sorts the data by Execution time. In case of grouped data it is normalised QTR and normalised Execuiton time.
 
 Note: In case both the flags are passed - Sorting by Duration takes precedence.
+
+
+Examples: 
+
+```
+// Example to do a profiler like analysis of logs 
+$ ./mongo-analyser-macos-arm64 -f logfile.log
+
+// Example to do a grouped analysis of logs 
+$ ./mongo-analyser-macos-arm64 -g -f logfile.log
+
+// Example to limit results to 10
+$ ./mongo-analyser-macos-arm64 -g -f logfile.log -l 10
+
+// Example to sort by QTR
+$ ./mongo-analyser-macos-arm64 -g -f logfile.log --sort-by-qtr
+
+```
