@@ -46,7 +46,7 @@ You can also sort results by using the following flags:
 Note: In case both the flags are passed - Sorting by Duration takes precedence.
 
 
-Examples: 
+## Examples: 
 
 ```
 // Example to do a profiler like analysis of logs 
