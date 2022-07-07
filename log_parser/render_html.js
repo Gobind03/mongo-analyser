@@ -1,5 +1,5 @@
 const fs = require("fs");
-exports.generate_html = (data, page_size = 50) => {
+exports.generate_html = (data, page_size = 50,summary) => {
     const columns = [];
     for (let name in data[0]) {
         columns.push(name);
@@ -27,6 +27,58 @@ table {
 </style>
             </head>
             <body class="container-fluid">
+            <table id="summary" class="table table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th>Property</th>
+                        <th>Value</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Number of COLLSCAN</td>
+                        <td>${summary.nCOLLSCAN}</td>
+                    </tr>
+                    <tr>
+                        <td>Number of Slow Ops</td>
+                        <td>${summary.nSlowOps}</td>
+                    </tr>
+                    <tr>
+                        <td>Number of Inserts</td>
+                        <td>${summary.nInsert}</td>
+                    </tr>
+                    <tr>
+                        <td>Number of Updates</td>
+                        <td>${summary.nUpdate}</td>
+                    </tr>
+                    <tr>
+                        <td>Number of Get More</td>
+                        <td>${summary.nGetMore}</td>
+                    </tr>
+                    <tr>
+                        <td>Number of Aggregate</td>
+                        <td>${summary.nAggregate}</td>
+                    </tr>
+                    <tr>
+                        <td>Number of Find</td>
+                        <td>${summary.nFind}</td>
+                    </tr>
+                    <tr>
+                        <td>Number of Count</td>
+                        <td>${summary.nCount}</td>
+                    </tr>
+                    <tr>
+                        <td>Slowest Operation Duration(in Millis)</td>
+                        <td>${summary.slowestOp}</td>
+                    </tr>
+                    <tr>
+                        <td>slowestQuery</td>
+                        <td>${summary.slowestQuery}</td>
+                    </tr>
+                    
+                </tbody>
+            </table>  
+
             <table id="example" data-page-length='${page_size}' class="table table-striped table-bordered"><thead><tr>`;
 
     for (let item of columns) {

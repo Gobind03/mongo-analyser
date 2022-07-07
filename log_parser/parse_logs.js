@@ -9,8 +9,20 @@ const {
 } = require('./utility');
 const {generate_html} = require('./render_html');
 
-exports.parse = (log_file, is_grouped, limit, page_size) => {
+exports.parse = (log_file, is_grouped, limit, page_size,slow_ms) => {
     let parsed_log_list = [];
+    let parsed_log_summary = {
+        nCOLLSCAN :0,
+        nSlowOps :0,
+        nFind :0,
+        nGetMore:0,
+        nAggregate :0,
+        nInsert :0,
+        nUpdate :0,
+        slowestOp:0,
+        nCount:0,
+        slowestQuery : ""
+    }
     let stream = fs.createReadStream(log_file)
         .pipe(es.split())
         .pipe(es.mapSync(function (log_line) {
@@ -52,10 +64,16 @@ exports.parse = (log_file, is_grouped, limit, page_size) => {
                                 "App Name": log.attr.appName.slice(0, 25) + '...',
                                 "Log": log_line
                             }
+                            if(parsed_log.Duration >= slow_ms){
+                                parsed_log_summary.nSlowOps++;
+                            }
+                            
                             if (opType === "Find") {
                                 parsed_log.Filter = log.attr.command.filter;
                                 parsed_log.Sort = (log.attr.command.sort) ? JSON.stringify(log.attr.command.sort) : "No Sort";
                                 parsed_log["Plan Summary"] = log.attr.planSummary;
+                                if (parsed_log["Plan Summary"] === "COLLSCAN") parsed_log_summary.nCOLLSCAN++;
+                                parsed_log_summary.nFind++;
                                 parsed_log.QTR = log.attr.docsExamined / log.attr.nreturned;
                                 if (parsed_log.QTR === "Infinity") parsed_log.QTR = "No Document Returned";
                                 else parsed_log.QTR = Math.round(parsed_log.QTR * 100) / 100
@@ -63,6 +81,8 @@ exports.parse = (log_file, is_grouped, limit, page_size) => {
                             if (opType === "Count") {
                                 parsed_log.Filter = log.attr.command.query;
                                 parsed_log["Plan Summary"] = log.attr.planSummary;
+                                if (parsed_log["Plan Summary"] === "COLLSCAN") parsed_log_summary.nCOLLSCAN++;
+                                parsed_log_summary.nCount++;
                                 parsed_log.QTR = log.attr.docsExamined;
                             }
                             if (opType === "Aggregate") {
@@ -72,6 +92,8 @@ exports.parse = (log_file, is_grouped, limit, page_size) => {
                                 parsed_log.Blocking = aggregation.blocking;
                                 parsed_log.Lookup = aggregation.lookup;
                                 parsed_log["Plan Summary"] = log.attr.planSummary;
+                                if (parsed_log["Plan Summary"] === "COLLSCAN") parsed_log_summary.nCOLLSCAN++;
+                                parsed_log_summary.nAggregate++;
                                 parsed_log.QTR = log.attr.docsExamined / log.attr.nreturned;
                                 if (parsed_log.QTR === "Infinity") parsed_log.QTR = "Check Log";
                                 else parsed_log.QTR = Math.round(parsed_log.QTR)
@@ -88,13 +110,25 @@ exports.parse = (log_file, is_grouped, limit, page_size) => {
                                     parsed_log.Sort = (log.attr.originatingCommand.sort) ? JSON.stringify(log.attr.originatingCommand.sort) : "No Sort";
                                 }
                                 parsed_log["Plan Summary"] = log.attr.planSummary;
+                                if (parsed_log["Plan Summary"] === "COLLSCAN") parsed_log_summary.nCOLLSCAN++;
+                                parsed_log_summary.nGetMore++;
                             }
                             if (opType === "Update") {
                                 // Bypass UpdateMany Logs As they do not contain much information
                                 if (typeof (log.attr.command.updates[0]) != 'undefined')
                                     parsed_log.Filter = log.attr.command.updates[0].q;
+                                
+                                if (parsed_log["Plan Summary"] === "COLLSCAN") parsed_log_summary.nCOLLSCAN++;
+                                parsed_log_summary.nUpdate++;
+                            }
+                            if (opType === "Insert") { 
+                                parsed_log_summary.nInsert++;
                             }
 
+                            if(parsed_log.Duration > parsed_log_summary.slowestOp){
+                                parsed_log_summary.slowestOp = parsed_log.Duration;
+                                parsed_log_summary.slowestQuery = JSON.stringify(parsed_log.Filter);
+                            }
                             // Push To Final Parsed Log Array
                             parsed_log_list.push(parsed_log);
                         }
@@ -167,8 +201,8 @@ exports.parse = (log_file, is_grouped, limit, page_size) => {
                         }
                     }
 
-                    parsed_log_list = parsed_log_list.splice(0, limit)
-                    generate_html(parsed_log_list, page_size);
+                    //parsed_log_list = parsed_log_list.splice(0, limit)
+                    generate_html(parsed_log_list, page_size,parsed_log_summary);
                     console.log('Analysis Done.')
                 })
         );

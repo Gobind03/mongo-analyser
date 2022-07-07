@@ -13,7 +13,10 @@ const argv = require('yargs/yargs')(hideBin(process.argv))
     .options('page-size', {
         alias: 'p', describe: 'Page size of HTML table in report', default: 50, type: 'number'
     })
+    .options('slow-ms', {
+        alias: 's', describe: 'Slow MS Threshold for Query Profiling', default: 100, type: 'number'
+    })
     .help('help').argv
 
 const {parse} = require('./log_parser/parse_logs');
-parse(argv.logFile, argv.grouped, argv.limit, argv.pageSize);
+parse(argv.logFile, argv.grouped, argv.limit, argv.pageSize,argv.slowMs);
