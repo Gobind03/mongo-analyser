@@ -9,19 +9,19 @@ const {
 } = require('./utility');
 const {generate_html} = require('./render_html');
 
-exports.parse = (log_file, is_grouped, limit, page_size,slow_ms) => {
+exports.parse = (log_file, is_grouped, limit, page_size, slow_ms) => {
     let parsed_log_list = [];
     let parsed_log_summary = {
-        nCOLLSCAN :0,
-        nSlowOps :0,
-        nFind :0,
-        nGetMore:0,
-        nAggregate :0,
-        nInsert :0,
-        nUpdate :0,
-        slowestOp:0,
-        nCount:0,
-        slowestQuery : ""
+        nCOLLSCAN: 0,
+        nSlowOps: 0,
+        nFind: 0,
+        nGetMore: 0,
+        nAggregate: 0,
+        nInsert: 0,
+        nUpdate: 0,
+        slowestOp: 0,
+        nCount: 0,
+        slowestQuery: ""
     }
     let stream = fs.createReadStream(log_file)
         .pipe(es.split())
@@ -64,10 +64,10 @@ exports.parse = (log_file, is_grouped, limit, page_size,slow_ms) => {
                                 "App Name": log.attr.appName.slice(0, 25) + '...',
                                 "Log": log_line
                             }
-                            if(parsed_log.Duration >= slow_ms){
+                            if (parsed_log.Duration >= slow_ms) {
                                 parsed_log_summary.nSlowOps++;
                             }
-                            
+
                             if (opType === "Find") {
                                 parsed_log.Filter = log.attr.command.filter;
                                 parsed_log.Sort = (log.attr.command.sort) ? JSON.stringify(log.attr.command.sort) : "No Sort";
@@ -117,15 +117,15 @@ exports.parse = (log_file, is_grouped, limit, page_size,slow_ms) => {
                                 // Bypass UpdateMany Logs As they do not contain much information
                                 if (typeof (log.attr.command.updates[0]) != 'undefined')
                                     parsed_log.Filter = log.attr.command.updates[0].q;
-                                
+
                                 if (parsed_log["Plan Summary"] === "COLLSCAN") parsed_log_summary.nCOLLSCAN++;
                                 parsed_log_summary.nUpdate++;
                             }
-                            if (opType === "Insert") { 
+                            if (opType === "Insert") {
                                 parsed_log_summary.nInsert++;
                             }
 
-                            if(parsed_log.Duration > parsed_log_summary.slowestOp){
+                            if (parsed_log.Duration > parsed_log_summary.slowestOp) {
                                 parsed_log_summary.slowestOp = parsed_log.Duration;
                                 parsed_log_summary.slowestQuery = JSON.stringify(parsed_log.Filter);
                             }
@@ -195,14 +195,17 @@ exports.parse = (log_file, is_grouped, limit, page_size,slow_ms) => {
                                 }
                             }
                         }
+                        parsed_log_list = sort_by_key(grouped_logs, "AvgTime");
+
                     } else {
                         for (let itr = 0; itr < parsed_log_list.length; itr++) {
                             parsed_log_list[itr].Filter = JSON.stringify(parsed_log_list[itr].Filter);
                         }
+                        parsed_log_list = sort_by_key(parsed_log_list, "Duration");
                     }
 
-                    //parsed_log_list = parsed_log_list.splice(0, limit)
-                    generate_html(parsed_log_list, page_size,parsed_log_summary);
+                    parsed_log_list = parsed_log_list.splice(0, limit);
+                    generate_html(parsed_log_list, page_size, parsed_log_summary);
                     console.log('Analysis Done.')
                 })
         );
