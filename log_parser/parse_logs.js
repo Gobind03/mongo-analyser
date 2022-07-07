@@ -9,7 +9,7 @@ const {
 } = require('./utility');
 const {generate_html} = require('./render_html');
 
-exports.parse = (log_file, is_grouped, limit, sortByQtr, sortByDuration) => {
+exports.parse = (log_file, is_grouped, limit, page_size) => {
     let parsed_log_list = [];
     let stream = fs.createReadStream(log_file)
         .pipe(es.split())
@@ -161,20 +161,14 @@ exports.parse = (log_file, is_grouped, limit, sortByQtr, sortByDuration) => {
                                 }
                             }
                         }
-                        parsed_log_list = sort_by_key(grouped_logs, "AvgTime")
-                        if (sortByQtr)
-                            parsed_log_list = sort_by_key(parsed_log_list, "AvgQTR");
                     } else {
                         for (let itr = 0; itr < parsed_log_list.length; itr++) {
                             parsed_log_list[itr].Filter = JSON.stringify(parsed_log_list[itr].Filter);
                         }
-                        parsed_log_list = sort_by_key(parsed_log_list, "Duration");
-                        if (sortByQtr)
-                            parsed_log_list = sort_by_key(parsed_log_list, "QTR");
                     }
 
                     parsed_log_list = parsed_log_list.splice(0, limit)
-                    generate_html(parsed_log_list);
+                    generate_html(parsed_log_list, page_size);
                     console.log('Analysis Done.')
                 })
         );

@@ -1,5 +1,5 @@
 const fs = require("fs");
-exports.generate_html = (data) => {
+exports.generate_html = (data, page_size = 50) => {
     const columns = [];
     for (let name in data[0]) {
         columns.push(name);
@@ -10,9 +10,11 @@ exports.generate_html = (data) => {
                 <title>Log Analysis</title>
                 <!-- Latest compiled and minified CSS -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css">
 <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 <!-- Latest compiled and minified JavaScript -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
             <style>
             td { 
     overflow: hidden; 
@@ -25,7 +27,7 @@ table {
 </style>
             </head>
             <body class="container-fluid">
-            <table class="table table-striped table-bordered"><thead><tr>`;
+            <table id="example" data-page-length='${page_size}' class="table table-striped table-bordered"><thead><tr>`;
 
     for (let item of columns) {
         html += '<th>' + item + '</th>';
@@ -67,7 +69,8 @@ table {
         }
         itr++;
     }
-    html += '</tbody></table>';
+    html += `</tbody></table> <script>$(document).ready(function () {
+            $('#example').DataTable();});</script>`;
     html += '</body></html>';
     fs.writeFileSync(process.cwd() + "/" + new Date().getTime().toString() + '.html', html);
 }
