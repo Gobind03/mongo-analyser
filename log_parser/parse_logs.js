@@ -5,7 +5,7 @@ const {
     process_aggregation,
     filter_commands,
     parse_optype,
-    redact
+    redact, redact_v2
 } = require('./utility');
 const {generate_html} = require('./render_html');
 
@@ -62,6 +62,7 @@ exports.parse = (log_file, is_grouped, limit, page_size, slow_ms) => {
                                 "Blocking": "N.A.",
                                 "Plan Summary": "N.A.",
                                 "App Name": log.attr.appName.slice(0, 25) + '...',
+                                "QueryHash": log.attr.queryHash,
                                 "Log": log_line
                             }
                             if (parsed_log.Duration >= slow_ms) {
@@ -157,7 +158,7 @@ exports.parse = (log_file, is_grouped, limit, page_size, slow_ms) => {
                         };
                         for (let itr = 0; itr < parsed_log_list.length; itr++) {
                             try {
-                                parsed_log_list[itr].Redacted = redact(parsed_log_list[itr].Filter)
+                                parsed_log_list[itr].Redacted = redact_v2(parsed_log_list[itr].Filter)
                             } catch (ex) {
                                 console.log(parsed_log_list[itr].Filter)
                                 console.log(ex)
@@ -167,7 +168,7 @@ exports.parse = (log_file, is_grouped, limit, page_size, slow_ms) => {
                         let is_collscan = false;
                         for (let i = 0; i < parsed_log_list.length; i++) {
                             if (i !== (parsed_log_list.length - 1)) {
-                                if (parsed_log_list[i].Redacted === parsed_log_list[i + 1].Redacted) {
+                                if (parsed_log_list[i].QueryHash === parsed_log_list[i + 1].QueryHash) {
                                     obj.Count++;
                                     obj.Filter = parsed_log_list[i].Redacted;
                                     obj.OpType = parsed_log_list[i]["Op Type"];

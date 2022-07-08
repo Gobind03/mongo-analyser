@@ -1,3 +1,6 @@
+const qs = require("qs");
+
+
 exports.sort_by_key = (array, key) => {
     return array.sort(function (a, b) {
         var x = a[key];
@@ -25,17 +28,17 @@ exports.process_aggregation = (pipeline) => {
             stage = key;
             break;
         }
-        if (stage == "$match") {
+        if (stage === "$match") {
             // final_data.filter = final_data.filter + " " + JSON.stringify(pipeline[i]["$match"]);
             final_data.filter = pipeline[i]["$match"];
         }
-        if (stage == "$sort") {
+        if (stage === "$sort") {
             final_data.sort = final_data.sort + " " + JSON.stringify(pipeline[i]["$sort"]);
         }
-        if (stage == "$lookup") {
+        if (stage === "$lookup") {
             final_data.lookup = "Yes";
         }
-        if (stage == "$group" || stage == "$bucket" || stage == "$bucketAuto") {
+        if (stage === "$group" || stage === "$bucket" || stage === "$bucketAuto") {
             final_data.blocking = "Yes";
         }
     }
@@ -87,3 +90,11 @@ exports.redact = (filter) => {
     }
     return JSON.stringify(filter);
 };
+
+exports.redact_v2 = (filter) => {
+    const topLevelTokens = qs.stringify(filter).split("&");
+    return JSON.stringify(qs.parse(topLevelTokens.map(tk => {
+        const [pre, val] = tk.split("=");
+        return [pre, "1"].join("=")
+    }).join("&")))
+}
