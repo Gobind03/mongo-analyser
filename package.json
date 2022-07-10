@@ -1,0 +1,50 @@
+{
+  "name": "mongo-analyser",
+  "version": "1.0.0",
+  "description": "A tool that is not keyhole",
+  "main": "./lib/index.js",
+  "bin": {
+    "pizza": "./lib/index.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon --watch 'src/**/*.ts' --exec 'ts-node' src/index.ts",
+    "start:windows": "nodemon --watch 'src/**/*.ts' --exec \"npx ts-node\" src/index.ts",
+    "create": "npm run build && npm run test",
+    "build": "tsc -p .",
+    "local": "sudo npm i -g && pizza",
+    "refresh": "rm -rf ./node_modules ./package-lock.json && npm install",
+    "build-mac-m1": "npm run build && pkg -t node16-macos-arm64 ./lib/index.js -c package.json --options max-old-space-size=8152 -o build/mongo-analyser-macos-arm64",
+    "build-mac-intel": "npm run build && pkg -t node16-macos-x64 ./lib/index.js -c package.json --options max-old-space-size=8152 -o build/mongo-analyser-macos-x64"
+  },
+  "keywords": [
+    "mongodb",
+    "analyzer",
+    "logs",
+    "logparser",
+    "query",
+    "analysis",
+    "slow",
+    "query",
+    "debugging"
+  ],
+  "author": "Gobind Singh",
+  "license": "ISC",
+  "dependencies": {
+    "chalk": "^4.1.2",
+    "clear": "^0.1.0",
+    "event-stream": "^4.0.1",
+    "figlet": "^1.5.2",
+    "path": "^0.12.7",
+    "pkg": "^5.7.0",
+    "qs": "^6.11.0",
+    "yargs": "^17.5.1"
+  },
+  "devDependencies": {
+    "@types/node": "^18.0.3",
+    "@types/qs": "^6.9.7",
+    "nodemon": "^2.0.19",
+    "ts-node": "^10.8.2",
+    "typescript": "^4.7.4"
+  }
+}
