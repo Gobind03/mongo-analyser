@@ -5,7 +5,7 @@ export declare class LogLine {
     private opType?;
     constructor(logLine: BaseObject);
     getLogLine(): LogLineModel;
-    private getOpType;
+    getOpType(): string;
     isAcceptableNamespace(): boolean;
     process_aggregation(): BaseObject;
     redact_v2(filter: BaseObject): string;

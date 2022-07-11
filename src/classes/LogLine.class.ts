@@ -18,7 +18,11 @@ export class LogLine {
         return this.logLine;
     }
 
-    private getOpType(): string {
+    getOpType(): string {
+        if (!this.logLine.attr)
+            return "";
+        if (!this.logLine.attr.command)
+            return "";
         if (this.logLine.attr.command.insert != null)
             return "Insert";
         else if (this.logLine.attr.command.find != null)

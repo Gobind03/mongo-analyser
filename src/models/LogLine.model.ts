@@ -30,6 +30,9 @@ export interface Command {
     batchSize?: number;
     singleBatch?: boolean;
     maxTimeMS: number;
+    sort?: BaseObject;
+    query?: BaseObject;
+    updates?: BaseObject;
 }
 
 export interface Attr {
@@ -48,6 +51,7 @@ export interface Attr {
     protocol: string;
     durationMillis: number;
     storage: Storage;
+    originatingCommand?: BaseObject;
 }
 
 export interface LogLineModel {
