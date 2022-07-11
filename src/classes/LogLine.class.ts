@@ -56,7 +56,7 @@ export class LogLine {
             lookup: "No"
         };
         if (this.opType == "Aggregate") return final_data;
-        let pipeline = this.logLine.attr.command.pipeline as Array<BaseObject>;
+        let pipeline = this.logLine.attr.command.pipeline as Array<BaseObject> || [];
         for (let i = 0; i < pipeline.length; i++) {
             let stage = "";
             for (let key in pipeline[i]) {

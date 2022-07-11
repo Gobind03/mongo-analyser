@@ -54,6 +54,7 @@ export class LogStreamer {
                     let logLine = logObject.getLogLine();
                     // process log here and call s.resume() when ready
                     if (logLine != null) {
+
                         // Only parse commands for the scope
                         // Filter out the commands with undefined attr and ns
                         if (logLine.c === "COMMAND"
@@ -64,7 +65,7 @@ export class LogStreamer {
                             if (!logLine.attr.appName) logLine.attr.appName = "";
 
                             // Filter Out System Commands
-                            if (logObject.isAcceptableNamespace()) {
+                            if (!logObject.isAcceptableNamespace()) {
 
                                 // Detect OpType
                                 // Current list of supported opTypes include Insert, Find, Update,
@@ -141,9 +142,14 @@ export class LogStreamer {
                                 if (opType === "Update") {
                                     // Bypass UpdateMany Logs As they do not contain much information
                                     // @ts-ignore
-                                    if (typeof (logLine.attr.command.updates[0]) != 'undefined')
-                                        // @ts-ignore
+
+                                    if (Array.isArray(logLine.attr.command?.updates)) {
                                         parsedLogLine.Filter = logLine.attr.command.updates[0].q;
+                                    }
+
+                                    // if (typeof (logLine.attr.command.updates[0]) != 'undefined')
+                                        // @ts-ignore
+                                        
 
                                     if (parsedLogLine["Plan Summary"] === "COLLSCAN") parsed_log_summary.nCOLLSCAN++;
                                     parsed_log_summary.nUpdate++;
