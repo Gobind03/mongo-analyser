@@ -40,12 +40,26 @@ export class LogLine {
     }
 
     isAcceptableNamespace(): boolean {
-        return (this.logLine.attr.ns.split(".")[0] !== "admin"
-            && this.logLine.attr.ns.split(".")[0] !== "local"
-            && this.logLine.attr.ns.split(".")[0] !== "config"
-            && this.logLine.attr.ns.split(".")[1] !== "$cmd"
-            && !this.logLine.attr.appName.includes("mongot")
-            && this.logLine.attr.command.createIndexes != null)
+        const nsSplit = this.logLine.attr.ns.split(".");
+        const notAllowedNamespaces = ["admin", "local", "config"];
+
+        if (notAllowedNamespaces.indexOf(nsSplit[0])) {
+            return false;
+        }
+
+        if (nsSplit[1] === "$cmd") {
+            return false;
+        }
+
+        if (this.logLine.attr?.appName.includes("mongot")) {
+            return false;
+        }
+
+        if (this.logLine.attr.command.createIndexes) {
+            return false;
+        }
+
+        return true;
     }
 
     process_aggregation(): BaseObject {
