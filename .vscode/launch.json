@@ -8,13 +8,15 @@
             "type": "pwa-node",
             "request": "launch",
             "name": "Launch Program",
-            "skipFiles": [
-                "<node_internals>/**"
-            ],
-            "program": "${workspaceFolder}/lib/index.js -f log1.log",
+            "program": "${workspaceFolder}/src/index.ts",
             "preLaunchTask": "tsc: build - tsconfig.json",
+            "sourceMaps": true,
+            "smartStep": true,
             "outFiles": [
                 "${workspaceFolder}/lib/**/*.js"
+            ],
+            "args": [
+                "-f=log1.log"
             ]
         }
     ]

@@ -48,10 +48,8 @@ export class LogStreamer {
         let stream = fs.createReadStream(this.logFile)
             .pipe(es.split())
             .pipe(es.mapSync((log: string) => {
-                console.log(log);
-                // pause the log stream to process the line
                 stream.pause();
-                if (log != null) {
+                if (log) {
                     let logObject = new LogLine(JSON.parse(log));
                     let logLine = logObject.getLogLine();
                     // process log here and call s.resume() when ready
