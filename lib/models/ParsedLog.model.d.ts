@@ -22,5 +22,4 @@ export interface ParsedLogGrouped {
     "Namespace": string;
     "Sort": string;
     "Most Degraded Plan": string;
-    "Redacted": string;
 }

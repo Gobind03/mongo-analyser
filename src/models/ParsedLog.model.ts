@@ -23,6 +23,5 @@ export interface ParsedLogGrouped {
     "AvgQTR": number,
     "Namespace": string,
     "Sort": string,
-    "Most Degraded Plan": string,
-    "Redacted": string;
+    "Most Degraded Plan": string
 }

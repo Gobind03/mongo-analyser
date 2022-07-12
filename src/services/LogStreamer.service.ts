@@ -72,98 +72,101 @@ export class LogStreamer {
                                 // getMore, Aggregate & Count
                                 let opType = logObject.getOpType();
 
-                                // Filter Query Details
-                                let parsedLogLine: ParsedLog = {
-                                    OpType: opType,
-                                    Duration: logLine.attr.durationMillis,
-                                    QTR: null,
-                                    Namespace: logLine.attr.ns,
-                                    Filter: {},
-                                    Sort: "No Sort",
-                                    Lookup: "N.A.",
-                                    Blocking: "N.A.",
-                                    "Plan Summary": "N.A.",
-                                    "App Name": logLine.attr.appName.slice(0, 25) + '...',
-                                    QueryHash: logLine.attr.queryHash,
-                                    Log: JSON.stringify(logLine)
-                                }
-                                if (parsedLogLine.Duration >= slowMs) {
-                                    parsed_log_summary.nSlowOps++;
-                                }
+                                if (opType != '') {
 
-                                if (opType === "Find") {
-                                    parsedLogLine.Filter = logLine.attr.command.filter || "-";
-                                    parsedLogLine.Sort = (logLine.attr.command.sort) ? JSON.stringify(logLine.attr.command.sort) : "No Sort";
-                                    parsedLogLine["Plan Summary"] = logLine.attr.planSummary;
-                                    if (parsedLogLine["Plan Summary"] === "COLLSCAN") parsed_log_summary.nCOLLSCAN++;
-                                    parsed_log_summary.nFind++;
-                                    parsedLogLine.QTR = logLine.attr.docsExamined / logLine.attr.nreturned;
-                                    // if (parsedLogLine.QTR === "Infinity") parsedLogLine.QTR = "No Document Returned";
-                                    parsedLogLine.QTR = Math.round(parsedLogLine.QTR * 100) / 100
-                                }
-                                if (opType === "Count") {
-                                    parsedLogLine.Filter = logLine.attr.command.query || "-";
-                                    parsedLogLine["Plan Summary"] = logLine.attr.planSummary;
-                                    if (parsedLogLine["Plan Summary"] === "COLLSCAN") parsed_log_summary.nCOLLSCAN++;
-                                    parsed_log_summary.nCount++;
-                                    parsedLogLine.QTR = logLine.attr.docsExamined;
-                                }
-                                if (opType === "Aggregate") {
-                                    let aggregation = logObject.process_aggregation();
-                                    parsedLogLine.Filter = aggregation.filter;
-                                    parsedLogLine.Sort = aggregation.sort;
-                                    parsedLogLine.Blocking = aggregation.blocking;
-                                    parsedLogLine.Lookup = aggregation.lookup;
-                                    parsedLogLine["Plan Summary"] = logLine.attr.planSummary;
-                                    if (parsedLogLine["Plan Summary"] === "COLLSCAN") parsed_log_summary.nCOLLSCAN++;
-                                    parsed_log_summary.nAggregate++;
-                                    parsedLogLine.QTR = logLine.attr.docsExamined / logLine.attr.nreturned;
-                                    // if (parsedLogLine.QTR === "Infinity") parsedLogLine.QTR = "Check Log";
-                                    parsedLogLine.QTR = Math.round(parsedLogLine.QTR)
-                                }
-                                if (opType === "getMore") {
-                                    // @ts-ignore
-                                    if (typeof (logLine.attr.originatingCommand.pipeline) != "undefined") {
+                                    // Filter Query Details
+                                    let parsedLogLine: ParsedLog = {
+                                        OpType: opType,
+                                        Duration: logLine.attr.durationMillis,
+                                        QTR: null,
+                                        Namespace: logLine.attr.ns,
+                                        Filter: {},
+                                        Sort: "No Sort",
+                                        Lookup: "N.A.",
+                                        Blocking: "N.A.",
+                                        "Plan Summary": "N.A.",
+                                        "App Name": logLine.attr.appName.slice(0, 25) + '...',
+                                        QueryHash: logLine.attr.queryHash,
+                                        Log: JSON.stringify(logLine)
+                                    }
+                                    if (parsedLogLine.Duration >= slowMs) {
+                                        parsed_log_summary.nSlowOps++;
+                                    }
+
+                                    if (opType === "Find") {
+                                        parsedLogLine.Filter = logLine.attr.command.filter || "-";
+                                        parsedLogLine.Sort = (logLine.attr.command.sort) ? JSON.stringify(logLine.attr.command.sort) : "No Sort";
+                                        parsedLogLine["Plan Summary"] = logLine.attr.planSummary;
+                                        if (parsedLogLine["Plan Summary"] === "COLLSCAN") parsed_log_summary.nCOLLSCAN++;
+                                        parsed_log_summary.nFind++;
+                                        parsedLogLine.QTR = logLine.attr.docsExamined / logLine.attr.nreturned;
+                                        // if (parsedLogLine.QTR === "Infinity") parsedLogLine.QTR = "No Document Returned";
+                                        parsedLogLine.QTR = Math.round(parsedLogLine.QTR * 100) / 100
+                                    }
+                                    if (opType === "Count") {
+                                        parsedLogLine.Filter = logLine.attr.command.query || "-";
+                                        parsedLogLine["Plan Summary"] = logLine.attr.planSummary;
+                                        if (parsedLogLine["Plan Summary"] === "COLLSCAN") parsed_log_summary.nCOLLSCAN++;
+                                        parsed_log_summary.nCount++;
+                                        parsedLogLine.QTR = logLine.attr.docsExamined;
+                                    }
+                                    if (opType === "Aggregate") {
                                         let aggregation = logObject.process_aggregation();
                                         parsedLogLine.Filter = aggregation.filter;
                                         parsedLogLine.Sort = aggregation.sort;
                                         parsedLogLine.Blocking = aggregation.blocking;
                                         parsedLogLine.Lookup = aggregation.lookup;
-                                    } else {
-                                        // @ts-ignore
-                                        parsedLogLine.Filter = logLine.attr.originatingCommand.filter;
-                                        // @ts-ignore
-                                        parsedLogLine.Sort = (logLine.attr.originatingCommand.sort) ? JSON.stringify(logLine.attr.originatingCommand.sort) : "No Sort";
+                                        parsedLogLine["Plan Summary"] = logLine.attr.planSummary;
+                                        if (parsedLogLine["Plan Summary"] === "COLLSCAN") parsed_log_summary.nCOLLSCAN++;
+                                        parsed_log_summary.nAggregate++;
+                                        parsedLogLine.QTR = logLine.attr.docsExamined / logLine.attr.nreturned;
+                                        // if (parsedLogLine.QTR === "Infinity") parsedLogLine.QTR = "Check Log";
+                                        parsedLogLine.QTR = Math.round(parsedLogLine.QTR)
                                     }
-                                    parsedLogLine["Plan Summary"] = logLine.attr.planSummary;
-                                    if (parsedLogLine["Plan Summary"] === "COLLSCAN") parsed_log_summary.nCOLLSCAN++;
-                                    parsed_log_summary.nGetMore++;
-                                }
-                                if (opType === "Update") {
-                                    // Bypass UpdateMany Logs As they do not contain much information
-                                    // @ts-ignore
+                                    if (opType === "getMore") {
+                                        // @ts-ignore
+                                        if (typeof (logLine.attr.originatingCommand.pipeline) != "undefined") {
+                                            let aggregation = logObject.process_aggregation();
+                                            parsedLogLine.Filter = aggregation.filter;
+                                            parsedLogLine.Sort = aggregation.sort;
+                                            parsedLogLine.Blocking = aggregation.blocking;
+                                            parsedLogLine.Lookup = aggregation.lookup;
+                                        } else {
+                                            // @ts-ignore
+                                            parsedLogLine.Filter = logLine.attr.originatingCommand.filter;
+                                            // @ts-ignore
+                                            parsedLogLine.Sort = (logLine.attr.originatingCommand.sort) ? JSON.stringify(logLine.attr.originatingCommand.sort) : "No Sort";
+                                        }
+                                        parsedLogLine["Plan Summary"] = logLine.attr.planSummary;
+                                        if (parsedLogLine["Plan Summary"] === "COLLSCAN") parsed_log_summary.nCOLLSCAN++;
+                                        parsed_log_summary.nGetMore++;
+                                    }
+                                    if (opType === "Update") {
+                                        // Bypass UpdateMany Logs As they do not contain much information
+                                        // @ts-ignore
 
-                                    if (Array.isArray(logLine.attr.command?.updates)) {
-                                        parsedLogLine.Filter = logLine.attr.command.updates[0].q;
+                                        if (Array.isArray(logLine.attr.command?.updates)) {
+                                            parsedLogLine.Filter = logLine.attr.command.updates[0].q;
+                                        }
+
+                                        // if (typeof (logLine.attr.command.updates[0]) != 'undefined')
+                                        // @ts-ignore
+
+
+                                        if (parsedLogLine["Plan Summary"] === "COLLSCAN") parsed_log_summary.nCOLLSCAN++;
+                                        parsed_log_summary.nUpdate++;
+                                    }
+                                    if (opType === "Insert") {
+                                        parsed_log_summary.nInsert++;
                                     }
 
-                                    // if (typeof (logLine.attr.command.updates[0]) != 'undefined')
-                                        // @ts-ignore
-                                        
-
-                                    if (parsedLogLine["Plan Summary"] === "COLLSCAN") parsed_log_summary.nCOLLSCAN++;
-                                    parsed_log_summary.nUpdate++;
+                                    if (parsedLogLine.Duration > parsed_log_summary.slowestOp) {
+                                        parsed_log_summary.slowestOp = parsedLogLine.Duration;
+                                        parsed_log_summary.slowestQuery = JSON.stringify(parsedLogLine.Filter);
+                                    }
+                                    // Push To Final Parsed Log Array
+                                    this.logList.push(parsedLogLine);
                                 }
-                                if (opType === "Insert") {
-                                    parsed_log_summary.nInsert++;
-                                }
-
-                                if (parsedLogLine.Duration > parsed_log_summary.slowestOp) {
-                                    parsed_log_summary.slowestOp = parsedLogLine.Duration;
-                                    parsed_log_summary.slowestQuery = JSON.stringify(parsedLogLine.Filter);
-                                }
-                                // Push To Final Parsed Log Array
-                                this.logList.push(parsedLogLine);
                             }
                         }
                     }
@@ -186,24 +189,38 @@ export class LogStreamer {
                             "AvgQTR": 0,
                             "Namespace": "",
                             "Sort": "",
-                            "Most Degraded Plan": "",
-                            "Redacted": ""
+                            "Most Degraded Plan": ""
                         };
 
                         let is_collscan = false;
-                        for (let i = 0; i < this.logList.length; i++) {
-                            if (i !== (this.logList.length - 1)) {
-                                if (this.logList[i].QueryHash === this.logList[i + 1].QueryHash) {
+                        for (let i = 0; i < parsed.length; i++) {
+                            if (i !== (parsed.length - 1)) {
+                                if (redact_v2(parsed[i].Filter) === redact_v2(parsed[i + 1].Filter)) {
                                     groupedLogLineData.Count++;
-                                    groupedLogLineData.Filter = redact_v2(this.logList[i].Filter);
-                                    groupedLogLineData.OpType = this.logList[i]["OpType"];
-                                    groupedLogLineData.AvgTime = Math.round((groupedLogLineData.AvgTime + this.logList[i]["Duration"]) / groupedLogLineData.Count);
-                                    groupedLogLineData.AvgQTR = Math.round((groupedLogLineData.AvgQTR + (this.logList[i]["QTR"] || 0)) / groupedLogLineData.Count);
-                                    groupedLogLineData.Namespace = this.logList[i]["Namespace"];
-                                    groupedLogLineData.Sort = this.logList[i].Sort;
-                                    groupedLogLineData["Most Degraded Plan"] = this.logList[i]["Plan Summary"];
+                                    groupedLogLineData.Filter = redact_v2(parsed[i].Filter);
+                                    if (parsed[i].Sort != 'No Sort') {
+                                        console.log("here")
+                                    }
+                                    groupedLogLineData.OpType = parsed[i]["OpType"];
+                                    groupedLogLineData.AvgTime = Math.round((groupedLogLineData.AvgTime + parsed[i]["Duration"]) / groupedLogLineData.Count);
+                                    groupedLogLineData.AvgQTR = Math.round((groupedLogLineData.AvgQTR + (parsed[i]["QTR"] || 0)) / groupedLogLineData.Count);
+                                    groupedLogLineData.Namespace = parsed[i]["Namespace"];
+                                    groupedLogLineData.Sort = parsed[i].Sort;
+                                    groupedLogLineData["Most Degraded Plan"] = parsed[i]["Plan Summary"];
                                     if (groupedLogLineData["Most Degraded Plan"] === "COLLSCAN") is_collscan = true;
                                 } else {
+                                    if (groupedLogLineData.OpType == "") {
+                                        groupedLogLineData = {
+                                            "Count": 0,
+                                            "AvgTime": parsed[i]["Duration"],
+                                            "OpType": parsed[i]["OpType"],
+                                            "Filter": redact_v2(parsed[i].Filter),
+                                            "AvgQTR": parsed[i]["QTR"],
+                                            "Namespace": parsed[i]["Namespace"],
+                                            "Sort": parsed[i].Sort,
+                                            "Most Degraded Plan": parsed[i]["Plan Summary"]
+                                        };
+                                    }
                                     groupedLogLineData.Count++;
                                     grouped_logs.push(groupedLogLineData);
                                     if (is_collscan) groupedLogLineData["Most Degraded Plan"] = "COLLSCAN";
@@ -216,8 +233,7 @@ export class LogStreamer {
                                         "AvgQTR": 0,
                                         "Namespace": "",
                                         "Sort": "",
-                                        "Most Degraded Plan": "",
-                                        "Redacted": ""
+                                        "Most Degraded Plan": ""
                                     };
                                 }
                             }
