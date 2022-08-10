@@ -3,7 +3,7 @@ import { BaseObject } from "../models/LogLine.model";
 import { ParsedLog, ParsedLogGrouped } from "../models/ParsedLog.model";
 import { redact_v2, sort_by_key } from "../utility/common.functions";
 import { RenderHTML } from "./RenderHTML.service";
-
+import { LocalDBAdapter } from "../adapters/nedb.adapter";
 
 const fs = require('fs');
 const es = require('event-stream');
@@ -18,6 +18,7 @@ export class LogStreamer {
     private uiPageSize: number;
     private slowMs: number;
     private htmlGenerator?: RenderHTML;
+    private parsedLogListDB: LocalDBAdapter;
 
     constructor(logFilePath: string, isGrouped: boolean, limit: number,
         uiPageSize: number, slowMs: number) {
@@ -27,6 +28,7 @@ export class LogStreamer {
         this.uiPageSize = uiPageSize;
         this.slowMs = slowMs;
         this.logList = [];
+        this.parsedLogListDB = new LocalDBAdapter("parsedLogs")
     }
 
     stream(): void {
@@ -166,6 +168,9 @@ export class LogStreamer {
                                     }
                                     // Push To Final Parsed Log Array
                                     this.logList.push(parsedLogLine);
+
+                                    // For future intents and purposes
+                                    this.parsedLogListDB.insert(parsedLogLine);
                                 }
                             }
                         }
