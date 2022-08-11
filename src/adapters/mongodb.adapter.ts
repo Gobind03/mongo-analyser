@@ -1,7 +1,6 @@
 var mongoClient = require("mongodb").MongoClient,
     db;
 
-
 class MongoDBAdapter {
     private db: any;
 
