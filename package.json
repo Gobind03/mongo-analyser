@@ -26,5 +26,8 @@
     "fast-redact": "^3.1.1",
     "json-to-table": "^4.2.1",
     "yargs": "^17.5.1"
+  },
+  "devDependencies": {
+    "pkg": "^5.8.0"
   }
 }
