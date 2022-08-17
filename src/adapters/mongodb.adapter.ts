@@ -1,7 +1,7 @@
 var mongoClient = require("mongodb").MongoClient,
     db;
 
-class MongoDBAdapter {
+export class MongoDBAdapter {
     private db: any;
 
     async connect(con_string: string, db_name: any) {
