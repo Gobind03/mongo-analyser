@@ -13,6 +13,6 @@ export class IndexStatsService {
     }
 
     getListOfCollection() : void {
-        let CollectionList = this.mongoDBAdapter.runAdminCommand({listCollections: 1})
+        let CollectionList = this.mongoDBAdapter.runAdminCommand({listDatabase: 1})
     }    
 }
