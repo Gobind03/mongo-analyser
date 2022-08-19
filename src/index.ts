@@ -2,6 +2,7 @@
 
 import { ChunkDistribution } from "./services/ChunkDistribution";
 import { LogStreamer } from "./services/LogStreamer.service";
+import { ShardStatus } from "./services/ShardStatus.service";
 
 const chalk = require('chalk');
 const clear = require('clear');
@@ -44,6 +45,9 @@ const argv = require('yargs/yargs')(hideBin(process.argv))
     .options('uri', {
         alias: 'u', describe: 'MongoDB connection uri', type: 'string'
     })
+    .options('shard-status', {
+        alias: 'ss', describe: 'Slow MS Threshold for Query Profiling', default: true
+    })
     .help('help').argv
 
 // logFilePath: string, isGrouped: boolean, limit: number,
@@ -56,5 +60,7 @@ if (argv.f) {
 if (argv.cd) {
     //console.log(argv.cd, argv.uri);
     const chunkDistribution = new ChunkDistribution(argv.u);
+    const shardStatus = new ShardStatus();
     chunkDistribution.print();
+    shardStatus.getStatus();
 }
