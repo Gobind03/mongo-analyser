@@ -29,7 +29,7 @@ const argv = require('yargs/yargs')(hideBin(process.argv))
         alias: 'l', describe: 'Limit the number of output rows', type: 'number', default: 100
     })
     .options('log-file', {
-        alias: 'f', describe: 'Full Log file path to analyse', demandOption: true, type: 'string'
+        alias: 'f', describe: 'Full Log file path to analyse', type: 'string'
     })
     .options('page-size', {
         alias: 'p', describe: 'Page size of HTML table in report', default: 50, type: 'number'
@@ -37,9 +37,24 @@ const argv = require('yargs/yargs')(hideBin(process.argv))
     .options('slow-ms', {
         alias: 's', describe: 'Slow MS Threshold for Query Profiling', default: 100, type: 'number'
     })
+    .options('index', {
+        alias: 'i', describe: 'Get Index Related Data', default: false, type: 'string'
+    })
+    .options('allInfo', {
+        alias: 'ai', describe: 'Get Index Related Data', default: false, type: 'string'
+    })
+    .options('schema', {
+        alias: 'i', describe: 'Get Index Related Data', default: false, type: 'string'
+    })
     .help('help').argv
 
 // logFilePath: string, isGrouped: boolean, limit: number,
 // uiPageSize: number, slowMs: number
-const logStreamer = new LogStreamer(argv.f, argv.g, argv.l, argv.p, argv.s);
-logStreamer.stream();
+if(!argv.i && argv.f) {
+    const logStreamer = new LogStreamer(argv.f, argv.g, argv.l, argv.p, argv.s);
+    logStreamer.stream();
+} else if(!argv.f) {
+    console.log("Please provide log path")
+} else {
+    // new URI Set
+}
