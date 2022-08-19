@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 
+import { ChunkDistribution } from "./services/ChunkDistribution";
 import { LogStreamer } from "./services/LogStreamer.service";
 
 const chalk = require('chalk');
@@ -29,7 +30,7 @@ const argv = require('yargs/yargs')(hideBin(process.argv))
         alias: 'l', describe: 'Limit the number of output rows', type: 'number', default: 100
     })
     .options('log-file', {
-        alias: 'f', describe: 'Full Log file path to analyse', demandOption: true, type: 'string'
+        alias: 'f', describe: 'Full Log file path to analyse', demandOption: false, type: 'string'
     })
     .options('page-size', {
         alias: 'p', describe: 'Page size of HTML table in report', default: 50, type: 'number'
@@ -37,9 +38,23 @@ const argv = require('yargs/yargs')(hideBin(process.argv))
     .options('slow-ms', {
         alias: 's', describe: 'Slow MS Threshold for Query Profiling', default: 100, type: 'number'
     })
+    .options('chunk-distribution', {
+        alias: 'cd', describe: 'Chunk distribution', default: true
+    })
+    .options('uri', {
+        alias: 'u', describe: 'MongoDB connection uri', type: 'string'
+    })
     .help('help').argv
 
 // logFilePath: string, isGrouped: boolean, limit: number,
 // uiPageSize: number, slowMs: number
-const logStreamer = new LogStreamer(argv.f, argv.g, argv.l, argv.p, argv.s);
-logStreamer.stream();
+if (argv.f) {
+    const logStreamer = new LogStreamer(argv.f, argv.g, argv.l, argv.p, argv.s);
+    logStreamer.stream();
+}
+
+if (argv.cd) {
+    //console.log(argv.cd, argv.uri);
+    const chunkDistribution = new ChunkDistribution(argv.u);
+    chunkDistribution.print();
+}
