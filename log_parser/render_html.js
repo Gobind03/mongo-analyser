@@ -1,5 +1,8 @@
 const fs = require("fs");
-exports.generate_html = (data, page_size = 50,summary) => {
+const {
+    saveToFileToOutFolder
+} = require('./utility');
+exports.generate_html = (data, page_size = 50,summary,fileName) => {
     const columns = [];
     for (let name in data[0]) {
         columns.push(name);
@@ -124,5 +127,5 @@ table {
     html += `</tbody></table> <script>$(document).ready(function () {
             $('#example').DataTable();});</script>`;
     html += '</body></html>';
-    fs.writeFileSync(process.cwd() + "/" + new Date().getTime().toString() + '.html', html);
+    saveToFileToOutFolder(html, fileName + ".html");
 }

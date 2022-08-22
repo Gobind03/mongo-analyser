@@ -5,7 +5,8 @@ const {
     process_aggregation,
     filter_commands,
     parse_optype,
-    redact, redact_v2
+    redact, redact_v2,
+    getFileName
 } = require('./utility');
 const {generate_html} = require('./render_html');
 
@@ -23,6 +24,7 @@ exports.parse = (log_file, is_grouped, limit, page_size, slow_ms) => {
         nCount: 0,
         slowestQuery: ""
     }
+    let baseFileName = getFileName(log_file)
     let stream = fs.createReadStream(log_file)
         .pipe(es.split())
         .pipe(es.mapSync(function (log_line) {
@@ -206,7 +208,7 @@ exports.parse = (log_file, is_grouped, limit, page_size, slow_ms) => {
                     }
 
                     parsed_log_list = parsed_log_list.splice(0, limit);
-                    generate_html(parsed_log_list, page_size, parsed_log_summary);
+                    generate_html(parsed_log_list, page_size, parsed_log_summary,baseFileName);
                     console.log('Analysis Done.')
                 })
         );
