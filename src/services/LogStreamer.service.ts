@@ -1,7 +1,7 @@
 import { LogLine } from "../classes/LogLine.class";
 import { BaseObject } from "../models/LogLine.model";
 import { ParsedLog, ParsedLogGrouped } from "../models/ParsedLog.model";
-import { redact_v2, sort_by_key } from "../utility/common.functions";
+import { redact_v2, sort_by_key, get_potential_index, get_potential_index_aggregate } from "../utility/common.functions";	
 import { RenderHTML } from "./RenderHTML.service";
 import { LocalDBAdapter } from "../adapters/nedb.adapter";
 
@@ -19,6 +19,8 @@ export class LogStreamer {
     private slowMs: number;
     private htmlGenerator?: RenderHTML;
     private parsedLogListDB: LocalDBAdapter;
+    private parsedLogListDBIndex: LocalDBAdapter;	
+
 
     constructor(logFilePath: string, isGrouped: boolean, limit: number,
         uiPageSize: number, slowMs: number) {
@@ -29,6 +31,8 @@ export class LogStreamer {
         this.slowMs = slowMs;
         this.logList = [];
         this.parsedLogListDB = new LocalDBAdapter("parsedLogs")
+        this.parsedLogListDBIndex= new LocalDBAdapter("parsedLogsIndex")	
+
     }
 
     stream(): void {
@@ -104,6 +108,9 @@ export class LogStreamer {
                                         parsedLogLine.QTR = logLine.attr.docsExamined / logLine.attr.nreturned;
                                         // if (parsedLogLine.QTR === "Infinity") parsedLogLine.QTR = "No Document Returned";
                                         parsedLogLine.QTR = Math.round(parsedLogLine.QTR * 100) / 100
+                                        // TODO: Run based on arguments
+                                        let data = get_potential_index(logLine,parsedLogLine,opType)	
+                                        this.parsedLogListDBIndex.insert(data);
                                     }
                                     if (opType === "Count") {
                                         parsedLogLine.Filter = logLine.attr.command.query || "-";
@@ -124,6 +131,9 @@ export class LogStreamer {
                                         parsedLogLine.QTR = logLine.attr.docsExamined / logLine.attr.nreturned;
                                         // if (parsedLogLine.QTR === "Infinity") parsedLogLine.QTR = "Check Log";
                                         parsedLogLine.QTR = Math.round(parsedLogLine.QTR)
+                                        // TODO: Run based on arguments
+                                        let data = get_potential_index_aggregate(logLine,opType)	
+                                        this.parsedLogListDBIndex.insert(data);
                                     }
                                     if (opType === "getMore") {
                                         // @ts-ignore
