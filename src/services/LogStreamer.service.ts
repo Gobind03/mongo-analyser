@@ -109,7 +109,7 @@ export class LogStreamer {
                                         // if (parsedLogLine.QTR === "Infinity") parsedLogLine.QTR = "No Document Returned";
                                         parsedLogLine.QTR = Math.round(parsedLogLine.QTR * 100) / 100
                                         // TODO: Run based on arguments
-                                        let data = get_potential_index(logLine,parsedLogLine,opType)	
+                                        let data = get_potential_index(logLine,parsedLogLine,opType)	 
                                         this.parsedLogListDBIndex.insert(data);
                                     }
                                     if (opType === "Count") {

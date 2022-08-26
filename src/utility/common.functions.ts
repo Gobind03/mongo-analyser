@@ -20,7 +20,6 @@ export const redact_v2 = (filter: BaseObject | string) => {
     }).join("&")))
 };
 
-
 // TODO : merge get_potential_index and get_potential_index_aggregate
 export function get_potential_index(logLine:any,parsedLogLine:any,opType:string){
     let queryFilter = logLine.attr.command.filter;
