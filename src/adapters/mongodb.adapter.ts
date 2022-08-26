@@ -7,7 +7,7 @@ export class MongoDBAdapter {
     async connect(con_string: string, db_name: any) {
         try {
             var connection = await mongoClient.connect(con_string, { useNewUrlParser: true });
-            this.db = connection.db(db_name);
+            this.db = await connection.db(db_name);
             console.log("MongoClient Connection successfull.");
         }
         catch (ex) {
@@ -42,6 +42,10 @@ export class MongoDBAdapter {
 
     async runAdminCommand(command: any) {
         return this.db.collection("admin").runCommand(command);
+    }
+
+    async runCommand(commandInput: any) {
+        return this.db.command(commandInput);
     }
 
     async close() {

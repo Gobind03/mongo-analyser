@@ -1,0 +1,125 @@
+{
+    "chunks Distribution": [
+        {
+            "chunks": 514,
+            "shard": "atlas-144piy-shard-0"
+        },
+        {
+            "chunks": 515,
+            "shard": "atlas-144piy-shard-1"
+        }
+    ],
+    "Top 10 largest sharded namespaces": [
+        {
+            "chunks": 1024,
+            "collection": "config.system.sessions"
+        },
+        {
+            "chunks": 5,
+            "collection": "global.location_unsharded"
+        }
+    ],
+    "Migration movement in last 1 day": [
+        {
+            "details": [
+                {
+                    "ns": "global.location_unsharded",
+                    "from": "atlas-144piy-shard-1",
+                    "to": "atlas-144piy-shard-0",
+                    "chunks_moved": 2,
+                    "docs_moved": 0,
+                    "bytes_moved": 0,
+                    "counts_docs_moved": 397091,
+                    "counts_bytes_moved": 134031448
+                }
+            ],
+            "chunks_moved": 2,
+            "docs_moved": 0,
+            "counts_docs_moved": 397091,
+            "date": "2022-08-19T09",
+            "data_moved(MB)": 0,
+            "counts_data_moved(MB)": 127.82234954833984
+        },
+        {
+            "details": [
+                {
+                    "ns": "config.system.sessions",
+                    "from": "atlas-144piy-shard-0",
+                    "to": "atlas-144piy-shard-1",
+                    "chunks_moved": 265,
+                    "docs_moved": 0,
+                    "bytes_moved": 0,
+                    "counts_docs_moved": 76,
+                    "counts_bytes_moved": 10632
+                },
+                {
+                    "ns": "global.location_unsharded",
+                    "from": "atlas-144piy-shard-1",
+                    "to": "atlas-144piy-shard-0",
+                    "chunks_moved": 2,
+                    "docs_moved": 0,
+                    "bytes_moved": 0,
+                    "counts_docs_moved": 397091,
+                    "counts_bytes_moved": 134045301
+                }
+            ],
+            "chunks_moved": 267,
+            "docs_moved": 0,
+            "counts_docs_moved": 397167,
+            "date": "2022-08-19T07",
+            "data_moved(MB)": 0,
+            "counts_data_moved(MB)": 127.84570026397705
+        },
+        {
+            "details": [
+                {
+                    "ns": "config.system.sessions",
+                    "from": "atlas-144piy-shard-0",
+                    "to": "atlas-144piy-shard-1",
+                    "chunks_moved": 247,
+                    "docs_moved": 0,
+                    "bytes_moved": 0,
+                    "counts_docs_moved": 38,
+                    "counts_bytes_moved": 5169
+                }
+            ],
+            "chunks_moved": 247,
+            "docs_moved": 0,
+            "counts_docs_moved": 38,
+            "date": "2022-08-19T06",
+            "data_moved(MB)": 0,
+            "counts_data_moved(MB)": 0.004929542541503906
+        }
+    ],
+    "Chunks Splits": [
+        {
+            "details": [
+                {
+                    "ns": "config.system.sessions",
+                    "shard": "atlas-144piy-shard-0",
+                    "chunks_split": 1023
+                }
+            ],
+            "chunks_split": 1023,
+            "date": "2022-08-19T06"
+        }
+    ],
+    "_id": "JNeMvjvnU6nXrhnL"
+}
+
+
+
+
+{
+    "Balancer": {
+        "mode": "full",
+        "inBalancerRound": false,
+        "numBalancerRounds": 1978
+    },
+    "ShardsList": {
+        "map": "{\"atlas-144piy-shard-0\":\"atlas-144piy-shard-0/atlas-144piy-shard-00-00.4xwip.mongodb.net:27017,atlas-144piy-shard-00-01.4xwip.mongodb.net:27017,atlas-144piy-shard-00-02.4xwip.mongodb.net:27017\",\"atlas-144piy-shard-1\":\"atlas-144piy-shard-1/atlas-144piy-shard-01-00.4xwip.mongodb.net:27017,atlas-144piy-shard-01-01.4xwip.mongodb.net:27017,atlas-144piy-shard-01-02.4xwip.mongodb.net:27017\",\"config\":\"atlas-144piy-config-0/atlas-144piy-config-00-00.4xwip.mongodb.net:27017,atlas-144piy-config-00-01.4xwip.mongodb.net:27017,atlas-144piy-config-00-02.4xwip.mongodb.net:27017\"}",
+        "hosts": "{\"atlas-144piy-shard-01-01.4xwip.mongodb.net:27017\":\"atlas-144piy-shard-1\",\"atlas-144piy-shard-01-00.4xwip.mongodb.net:27017\":\"atlas-144piy-shard-1\",\"atlas-144piy-shard-00-00.4xwip.mongodb.net:27017\":\"atlas-144piy-shard-0\",\"atlas-144piy-shard-00-01.4xwip.mongodb.net:27017\":\"atlas-144piy-shard-0\",\"atlas-144piy-shard-01-02.4xwip.mongodb.net:27017\":\"atlas-144piy-shard-1\",\"atlas-144piy-shard-00-02.4xwip.mongodb.net:27017\":\"atlas-144piy-shard-0\",\"atlas-144piy-config-00-00.4xwip.mongodb.net:27017\":\"config\",\"atlas-144piy-config-00-01.4xwip.mongodb.net:27017\":\"config\",\"atlas-144piy-config-00-02.4xwip.mongodb.net:27017\":\"config\"}",
+        "connStrings": "{\"atlas-144piy-shard-0/atlas-144piy-shard-00-00.4xwip.mongodb.net:27017,atlas-144piy-shard-00-01.4xwip.mongodb.net:27017,atlas-144piy-shard-00-02.4xwip.mongodb.net:27017\":\"atlas-144piy-shard-0\",\"atlas-144piy-shard-1/atlas-144piy-shard-01-00.4xwip.mongodb.net:27017\":\"atlas-144piy-shard-1\",\"atlas-144piy-shard-1/atlas-144piy-shard-01-00.4xwip.mongodb.net:27017,atlas-144piy-shard-01-01.4xwip.mongodb.net:27017,atlas-144piy-shard-01-02.4xwip.mongodb.net:27017\":\"atlas-144piy-shard-1\",\"atlas-144piy-shard-1/atlas-144piy-shard-01-00.4xwip.mongodb.net:27017,atlas-144piy-shard-01-02.4xwip.mongodb.net:27017\":\"atlas-144piy-shard-1\",\"atlas-144piy-config-0/atlas-144piy-config-00-00.4xwip.mongodb.net:27017,atlas-144piy-config-00-01.4xwip.mongodb.net:27017,atlas-144piy-config-00-02.4xwip.mongodb.net:27017\":\"config\"}"
+    },
+    "_id": "MM0YmFGYWbShKIAV"
+}
