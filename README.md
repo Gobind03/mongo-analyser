@@ -1,3 +1,6 @@
+# DEPRICATIOON ALERT
+This project has been depricated. All the new developments and maintenance has been shifted to: https://github.com/Gobind03/mongolyser 
+
 # HOW TO INSTALL
 
 1. Install Nodejs v16
